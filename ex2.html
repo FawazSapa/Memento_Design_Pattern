@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="light dark">
+  <title>Example-1</title>
+</head>
+
+<body>
+  <pre style="word-wrap: break-word; white-space: pre-wrap;">
+     //all includes
+        class TaskMemento {
+        private:
+            std::string taskName;
+            bool isCompleted;
+        
+        public:
+            TaskMemento(const std::string& name, bool completed)
+                : taskName(name), isCompleted(completed) {}
+        
+            std::string getTaskName() const {
+                return taskName;
+            }
+        
+            bool getIsCompleted() const {
+                return isCompleted;
+            }
+        };
+        
+        class Task {
+        private:
+            std::string taskName;
+            bool isCompleted;
+        
+        public:
+            Task(const std::string& name) : taskName(name), isCompleted(false) {}
+        
+            void complete() {
+                isCompleted = true;
+            }
+        
+            void uncomplete() {
+                isCompleted = false;
+            }
+        
+            TaskMemento createMemento() const {
+                return TaskMemento(taskName, isCompleted);
+            }
+        
+            void restoreMemento(const TaskMemento& memento) {
+                taskName = memento.getTaskName();
+                isCompleted = memento.getIsCompleted();
+            }
+        
+            void displayTask() {
+                std::cout << "Task: " << taskName << ", Completed: " << (isCompleted ? "Yes" : "No") << std::endl;
+            }
+        };
+        
+        class TaskManager {
+        private:
+            std::vector<TaskMemento> history;
+            Task currentTask;
+        
+        public:
+            void addTask(const std::string& taskName) {
+                currentTask = Task(taskName);
+                currentTask.displayTask();
+            }
+        
+            void completeCurrentTask() {
+                currentTask.complete();
+                currentTask.displayTask();
+            }
+        
+            void uncompleteCurrentTask() {
+                currentTask.uncomplete();
+                currentTask.displayTask();
+            }
+        
+            void saveTask() {
+                history.push_back(currentTask.createMemento());
+                std::cout << "Task saved." << std::endl;
+            }
+        
+            void undo() {
+                if (!history.empty()) {
+                    currentTask.restoreMemento(history.back());
+                    history.pop_back();
+                    std::cout << "Undo: ";
+                    currentTask.displayTask();
+                } else {
+                    std::cout << "Nothing to undo." << std::endl;
+                }
+            }
+        };
+        
+        int main() {
+            TaskManager taskManager;
+        
+            taskManager.addTask("Write code");
+            taskManager.saveTask();
+            taskManager.completeCurrentTask();
+            taskManager.saveTask();
+            taskManager.uncompleteCurrentTask();
+            taskManager.saveTask();
+            taskManager.undo();
+            taskManager.undo();
+        
+            return 0;
+        }
+
+       
+
+
+
+	</pre>
+
+</body>
+
+</html>
